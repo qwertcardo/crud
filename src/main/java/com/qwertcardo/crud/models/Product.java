@@ -7,7 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+
 
 @Entity
 @Table(name = "TB_PRODUCT")
@@ -18,11 +23,18 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	@NotNull
 	private String name;
 	
+	@Min(value = 0)
 	private BigDecimal price;
 	
+	@NotNull
 	private String description;
+	
+	@NotNull
+	@ManyToOne
+	private User owner;
 
 	public long getId() {
 		return id;
@@ -55,6 +67,13 @@ public class Product implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+
+	public User getOwner() {
+		return owner;
+	}
+
+	public void setOwner(User owner) {
+		this.owner = owner;
+	}
 	
-		
 }

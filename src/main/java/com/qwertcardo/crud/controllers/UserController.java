@@ -4,70 +4,75 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.qwertcardo.crud.models.Product;
-import com.qwertcardo.crud.services.ProductService;
+import com.qwertcardo.crud.models.User;
+import com.qwertcardo.crud.services.UserService;
 
-@RestController
-@RequestMapping(value = "/product")
-public class ProductRestController {
-
+@Controller
+@RequestMapping(value = "/users")
+public class UserController {
+	
 	@Autowired
-	private ProductService service;
+	private UserService service;
 	
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public ResponseEntity<Product> create(@RequestBody Product product) {
-		Product newProduct = service.save(product);
+	public ResponseEntity<User> create(@RequestBody User user) {
+		User newUser = service.save(user);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}").buildAndExpand(newProduct.getId()).toUri();
-		
-		return ResponseEntity.created(uri).body(newProduct);
+				.path("/{id}").buildAndExpand(newUser.getId()).toUri();
+		return ResponseEntity.created(uri).body(newUser);
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-	public ResponseEntity<Product> update(@PathVariable long id, @RequestBody Product product) {
+	public ResponseEntity<User> update(@PathVariable long id, @RequestBody User user) {
 		try {
-			return ResponseEntity.ok(service.update(id, product));
+			return ResponseEntity.ok(service.update(id, user));			
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().build();
 		}
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Product> delete(@PathVariable long id) {
-		service.delete(id);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<User> delete(@PathVariable long id) {
+		try {
+			service.delete(id);
+			return ResponseEntity.ok().build();
+		} catch (DataIntegrityViolationException e) {
+			return ResponseEntity.badRequest().build();
+		}
+		
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<Product> getById(@PathVariable long id) {
+	public ResponseEntity<User> getById(@PathVariable long id) {
 		try {
-			return ResponseEntity.ok(service.getById(id));			
+			return ResponseEntity.ok(service.getById(id));
 		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().build();
 		}
 	}
 	
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public ResponseEntity<List<Product>> getProductList() {
-		return ResponseEntity.ok(service.getProductList());
+	public ResponseEntity<List<User>> getUserList() {
+		return ResponseEntity.ok(service.getUserList());
 	}
 	
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public ResponseEntity<Page<Product>> getProductPage(
+	public ResponseEntity<Page<User>> getUserPage(
 			@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable) {
-		return ResponseEntity.ok(service.getProductPage(pageable));
+		return ResponseEntity.ok(service.getUserPage(pageable));
 	}
-	
+
 }

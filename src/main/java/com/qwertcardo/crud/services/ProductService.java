@@ -26,18 +26,19 @@ public class ProductService {
 		productData.setName(product.getName() != null ? product.getName() : productData.getName());
 		productData.setPrice(product.getPrice() != null ? product.getPrice() : productData.getPrice());
 		productData.setDescription(product.getDescription() != null ? product.getDescription() : productData.getDescription());
+		productData.setOwner(product.getOwner().getId() != null ? product.getOwner() : productData.getOwner());
 		
 		return repository.saveAndFlush(productData);
 	}
 	
 	public void delete(long id) {
-		repository.deleteById(id);
+		repository.deleteById(id);			
 	}
 	
 	public Product getById(long id) {
 		Optional<Product> product = repository.findById(id);
 		return product.orElseThrow(
-				() -> new RuntimeException("Product Not Found with id:" + id));
+				() -> new IllegalArgumentException("There is no Product with id: " + id));
 	}
 	
 	public List<Product> getProductList() {
