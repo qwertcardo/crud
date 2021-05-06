@@ -12,7 +12,6 @@ import com.qwertcardo.crud.repositories.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import javassist.NotFoundException;
 
 @Service
 public class TokenService {
@@ -48,9 +47,9 @@ public class TokenService {
 		return Long.parseLong(body.getSubject());
 	}
 	
-	public User getUser(String token) throws NotFoundException {
+	public User getUser(String token) {
 		return repository.findById(extractId(token)).orElseThrow(
-					() -> new NotFoundException("Has no Active User with this id."));
+					() -> new IllegalArgumentException("Has no Active User with this id."));
 	}
 	
 }

@@ -12,8 +12,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-
-
 @Entity
 @Table(name = "TB_PRODUCT")
 public class Product implements Serializable {
@@ -31,6 +29,13 @@ public class Product implements Serializable {
 	
 	@NotNull
 	private String description;
+		
+	@NotNull
+	@Min(value = 0)
+	private Integer inStock;
+	
+	@NotNull
+	private Integer selled;
 	
 	@NotNull
 	@ManyToOne
@@ -75,5 +80,21 @@ public class Product implements Serializable {
 	public void setOwner(User owner) {
 		this.owner = owner;
 	}
-	
+
+	public Integer getInStock() {
+		return inStock;
+	}
+
+	public void setInStock(Integer inStock) {
+		this.inStock = inStock;
+	}
+
+	public Integer getSelled() {
+		return selled;
+	}
+
+	public void setSelled(Integer selled) {
+		this.selled = selled;
+	}
+		
 }

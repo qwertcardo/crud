@@ -2,7 +2,6 @@ package com.qwertcardo.crud.models;
 
 public class LoginResponse {
 
-	
 	private User user;
 	
 	private String token;

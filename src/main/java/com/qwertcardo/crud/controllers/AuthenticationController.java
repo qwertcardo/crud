@@ -15,8 +15,6 @@ import com.qwertcardo.crud.models.LoginRequest;
 import com.qwertcardo.crud.models.LoginResponse;
 import com.qwertcardo.crud.services.TokenService;
 
-import javassist.NotFoundException;
-
 @Controller
 @RequestMapping(value = "/login")
 public class AuthenticationController {
@@ -39,7 +37,7 @@ public class AuthenticationController {
 			return ResponseEntity.ok(response);
 		} catch (AuthenticationException e) {
 			return ResponseEntity.badRequest().build();
-		} catch (NotFoundException e) {
+		} catch (IllegalArgumentException e) {
 			return ResponseEntity.badRequest().build();
 		}
 	}

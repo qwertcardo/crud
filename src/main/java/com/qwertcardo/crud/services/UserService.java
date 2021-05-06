@@ -1,5 +1,6 @@
 package com.qwertcardo.crud.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.qwertcardo.crud.models.Product;
 import com.qwertcardo.crud.models.User;
 import com.qwertcardo.crud.repositories.UserRepository;
 
@@ -23,7 +25,9 @@ public class UserService {
 	
 	public User save(User user) {
 		User newUser = user;
+		List<Product> productsList = new ArrayList<Product>();
 		newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+		newUser.setProducts(productsList);
 		return repository.saveAndFlush(user);
 	}
 	
@@ -31,7 +35,8 @@ public class UserService {
 		User userData = getById(id);
 		userData.setName(user.getName());
 		userData.setEmail(user.getEmail());
-		userData.setPassword(user.getPassword() != null ? user.getPassword() : userData.getPassword());
+		userData.setLogin(user.getLogin());
+		userData.setPassword((user.getPassword() != null && !user.getPassword().isEmpty())? passwordEncoder.encode(user.getPassword()) : userData.getPassword());
 		userData.setBirthDate(user.getBirthDate() != null ? user.getBirthDate() : userData.getBirthDate());
 		
 		return repository.saveAndFlush(userData);

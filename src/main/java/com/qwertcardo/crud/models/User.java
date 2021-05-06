@@ -3,11 +3,14 @@ package com.qwertcardo.crud.models;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -38,6 +41,7 @@ public class User implements UserDetails {
 	public String email;
 	
 	@CPF
+	@JsonProperty(access = Access.WRITE_ONLY)
 	public String cpf;
 	
 	@NotNull
@@ -47,12 +51,15 @@ public class User implements UserDetails {
 	@NotNull
 	public LocalDate birthDate;
 	
+	@JsonIgnore
+	@OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
+	public List<Product> products;
 	
 	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -102,6 +109,14 @@ public class User implements UserDetails {
 	
 	public String getPassword() {
 		return this.password;
+	}
+
+	public List<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<Product> products) {
+		this.products = products;
 	}
 
 	@Override
