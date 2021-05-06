@@ -37,7 +37,7 @@ public class UserService {
 		userData.setEmail(user.getEmail());
 		userData.setLogin(user.getLogin());
 		userData.setPassword((user.getPassword() != null && !user.getPassword().isEmpty())? passwordEncoder.encode(user.getPassword()) : userData.getPassword());
-		userData.setBirthDate(user.getBirthDate() != null ? user.getBirthDate() : userData.getBirthDate());
+		userData.setBirthDate(Optional.ofNullable(user.getBirthDate()).orElse(userData.getBirthDate()));
 		
 		return repository.saveAndFlush(userData);
 	}

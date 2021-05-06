@@ -28,9 +28,9 @@ public class ProductRestController {
 	@Autowired
 	private ProductService service;
 	
-	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public ResponseEntity<Product> create(@RequestBody Product product) {
-		Product newProduct = service.save(product);
+	@RequestMapping(value = "/{id}/save", method = RequestMethod.POST)
+	public ResponseEntity<Product> create(@PathVariable long id, @RequestBody Product product) {
+		Product newProduct = service.save(id, product);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(newProduct.getId()).toUri();
 		

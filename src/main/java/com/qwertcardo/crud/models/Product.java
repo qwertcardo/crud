@@ -35,6 +35,7 @@ public class Product implements Serializable {
 	private Integer inStock;
 	
 	@NotNull
+	@Min(value = 0)
 	private Integer selled;
 	
 	@NotNull

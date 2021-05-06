@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.qwertcardo.crud.models.Product;
 import com.qwertcardo.crud.models.ProductSell;
+import com.qwertcardo.crud.models.User;
 import com.qwertcardo.crud.repositories.ProductRepository;
 
 @Service
@@ -19,16 +20,24 @@ public class ProductService {
 	@Autowired
 	private ProductRepository repository;
 	
-	public Product save(Product product) {
+	public Product save(long id, Product product) {
+		User user = new User();
+		user.setId(id);
+		
+		Product newProduct = product;
+		newProduct.setSelled(0);
+		newProduct.setOwner(user);
+		
 		return repository.saveAndFlush(product);
 	}
 	
 	public Product update(long id, Product product) {
 		Product productData = getById(id);
-		productData.setName(product.getName() != null ? product.getName() : productData.getName());
-		productData.setPrice(product.getPrice() != null ? product.getPrice() : productData.getPrice());
-		productData.setDescription(product.getDescription() != null ? product.getDescription() : productData.getDescription());
-		productData.setOwner(product.getOwner().getId() != null ? product.getOwner() : productData.getOwner());
+		productData.setName(Optional.ofNullable(product.getName()).orElse(productData.getName()));
+		productData.setPrice(Optional.ofNullable(product.getPrice()).orElse(productData.getPrice()));
+		productData.setDescription(Optional.ofNullable(product.getDescription()).orElse(productData.getDescription()));
+		productData.setInStock(Optional.ofNullable(product.getInStock()).orElse(productData.getInStock()));
+		productData.setOwner(Optional.ofNullable(product.getOwner()).orElse(productData.getOwner()));
 		
 		return repository.saveAndFlush(productData);
 	}
